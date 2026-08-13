@@ -1,7 +1,7 @@
 /* DermaSoZo GHL page loader — about */
 (function () {
   document.write('<style>body{display:none !important}</style>');
-  fetch('https://betterbranding.github.io/dermasozo/pages/about.html?v=1', { cache: 'no-cache' })
+  fetch('https://betterbranding.github.io/dermasozo/pages/about.html?v=2', { cache: 'no-cache' })
     .then(function (r) { return r.text(); })
     .then(function (html) {
       document.open();
