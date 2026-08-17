@@ -1,4 +1,4 @@
-/* DermaSoZo GHL page loader v3 (fast) — Home */
+/* DermaSoZo GHL page loader v4 (instant swap) — Home */
 (function () {
   var GH = 'https://betterbranding.github.io/dermasozo';
   /* 1. critical request first: start fetching the page at parse time, browser cache allowed */
@@ -18,11 +18,34 @@
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
     '<link rel="preload" as="image" href="' + GH + '/images/hero-duo.jpg">';
   document.write(head);
-  /* 4. swap the document the instant the HTML arrives (also aborts GHL's own asset load) */
+  /* 4. re-create scripts after surgery so the browser executes them */
+  function arm() {
+    var olds = document.querySelectorAll('script'), i, j, s, n;
+    for (i = 0; i < olds.length; i++) {
+      s = olds[i]; n = document.createElement('script');
+      for (j = 0; j < s.attributes.length; j++) n.setAttribute(s.attributes[j].name, s.attributes[j].value);
+      n.async = false;
+      if (!s.src) n.text = s.text || '';
+      s.parentNode.replaceChild(n, s);
+    }
+  }
+  /* 5. swap the DOM the instant the HTML arrives. document.open() gets deferred by the
+     browser until GHL's own page finishes loading, so we halt GHL (window.stop) and
+     transplant the new document directly: render is immediate, and GHL's remaining
+     asset queue is cancelled instead of competing for bandwidth. */
   page.then(function (html) {
-    document.open();
-    document.write(html);
-    document.close();
+    try {
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      try { window.stop(); } catch (e0) {}
+      document.replaceChild(document.adoptNode(doc.documentElement), document.documentElement);
+      arm();
+      window.scrollTo(0, 0);
+    } catch (e) {
+      /* fallback: classic full-document rewrite (renders after GHL finishes loading) */
+      document.open();
+      document.write(html);
+      document.close();
+    }
   }).catch(function () {
     var s = document.getElementById('dszSplash');
     if (s) s.remove();
