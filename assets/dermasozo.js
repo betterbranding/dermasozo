@@ -37,3 +37,85 @@
   }, { threshold: .14, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
 })();
+
+/* ---------- Before/After results carousel (added 2026-08-24) ---------- */
+(function(){
+  var mount = document.querySelector('[data-dsz-ba]');
+  if (!mount) return;
+  var IMG = 'https://betterbranding.github.io/dermasozo/images/';
+  var CARDS = [
+    { img: 'ba-w-sunburn.jpg',  tag: 'Sunburn',                area: 'Shoulders and upper back',  alt: 'Before and after comparison of sunburned shoulders, calmed and even-toned' },
+    { img: 'ba-m-postproc.jpg', tag: 'Post-procedure redness', area: 'Face, after microneedling', alt: 'Before and after comparison of post-procedure facial redness on a man, calmed and even-toned' },
+    { img: 'ba-w-burn.jpg',     tag: 'Minor kitchen burn',     area: 'Forearm',                   alt: 'Before and after comparison of a minor kitchen burn on a forearm, smooth and even-toned' },
+    { img: 'ba-m-sunburn.jpg',  tag: 'Sunburn',                area: 'Back of neck',              alt: 'Before and after comparison of a sunburned neck, calmed and even-toned' },
+    { img: 'ba-w-postproc.jpg', tag: 'Post-procedure redness', area: 'Face, after laser',         alt: 'Before and after comparison of post-procedure facial redness on a woman, calmed and even-toned' },
+    { img: 'ba-m-burn.jpg',     tag: 'Minor grill burn',       area: 'Forearm',                   alt: 'Before and after comparison of a minor grill burn on a forearm, smooth and even-toned' }
+  ];
+  var cardsHtml = CARDS.map(function(c){
+    return '<figure class="ba-card"><div class="ba-imgwrap">'
+      + '<img src="' + IMG + c.img + '" alt="' + c.alt + '" loading="lazy" draggable="false">'
+      + '<span class="ba-chip ba-chip-b">Before</span><span class="ba-chip ba-chip-a">After</span>'
+      + '</div><figcaption><strong>' + c.tag + '</strong><span>' + c.area + '</span></figcaption></figure>';
+  }).join('');
+  mount.innerHTML = '<section class="ba-sec" id="results" aria-label="Before and after gallery"><div class="wrap">'
+    + '<div class="sec-head rv"><span class="eyebrow">Before and After</span>'
+    + '<h2>Recovery you can <em>see</em></h2>'
+    + '<p>Sunburn. Minor kitchen burns. Post-procedure redness. Swipe through the kinds of moments this system was made for.</p></div>'
+    + '<div class="ba-shell rv"><button class="ba-nav ba-prev" aria-label="Previous">&#8592;</button>'
+    + '<div class="ba-track">' + cardsHtml + '</div>'
+    + '<button class="ba-nav ba-next" aria-label="Next">&#8594;</button></div>'
+    + '<div class="ba-dots"></div>'
+    + '<p class="ba-note">Illustrative depictions. Individual results vary.</p>'
+    + '</div></section>';
+
+  var track = mount.querySelector('.ba-track'),
+      dotsBox = mount.querySelector('.ba-dots'),
+      cards = mount.querySelectorAll('.ba-card');
+  function step(){ return cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : cards[0].offsetWidth; }
+  function idx(){ return Math.max(0, Math.min(cards.length - 1, Math.round(track.scrollLeft / step()))); }
+  function goTo(i){ track.scrollTo({ left: i * step(), behavior: 'smooth' }); }
+  CARDS.forEach(function(_, i){
+    var b = document.createElement('button');
+    b.setAttribute('aria-label', 'Go to comparison ' + (i + 1));
+    b.addEventListener('click', function(){ goTo(i); rest(); });
+    dotsBox.appendChild(b);
+  });
+  var dots = dotsBox.querySelectorAll('button');
+  function paint(){ var i = idx(); dots.forEach(function(d, k){ d.classList.toggle('on', k === i); }); }
+  track.addEventListener('scroll', paint, { passive: true }); paint();
+  mount.querySelector('.ba-prev').addEventListener('click', function(){ goTo(Math.max(0, idx() - 1)); rest(); });
+  mount.querySelector('.ba-next').addEventListener('click', function(){ goTo(Math.min(cards.length - 1, idx() + 1)); rest(); });
+
+  var down = false, sx = 0, sl = 0, moved = false;
+  track.addEventListener('pointerdown', function(e){
+    if (e.pointerType !== 'mouse') return;
+    down = true; moved = false; sx = e.clientX; sl = track.scrollLeft; track.classList.add('drag');
+  });
+  window.addEventListener('pointermove', function(e){
+    if (!down) return;
+    if (Math.abs(e.clientX - sx) > 4) moved = true;
+    track.scrollLeft = sl - (e.clientX - sx);
+  });
+  window.addEventListener('pointerup', function(){
+    if (!down) return;
+    down = false; track.classList.remove('drag');
+    goTo(idx()); rest();
+  });
+  track.addEventListener('click', function(e){ if (moved) e.preventDefault(); }, true);
+
+  var timer = null, resting = null;
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function play(){ if (still || timer) return; timer = setInterval(function(){ var i = idx(); goTo(i >= cards.length - 1 ? 0 : i + 1); }, 5200); }
+  function stop(){ if (timer) { clearInterval(timer); timer = null; } }
+  function rest(){ stop(); if (resting) clearTimeout(resting); resting = setTimeout(play, 9000); }
+  var vis = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) { play(); } else { stop(); } }); }, { threshold: .25 });
+  vis.observe(track);
+  track.addEventListener('pointerenter', stop);
+  track.addEventListener('pointerleave', function(){ if (!down) play(); });
+  track.addEventListener('touchstart', function(){ rest(); }, { passive: true });
+
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: .14, rootMargin: '0px 0px -40px 0px' });
+  mount.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+})();
