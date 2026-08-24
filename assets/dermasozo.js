@@ -49,12 +49,12 @@
   }
   var IMG = 'https://betterbranding.github.io/dermasozo/images/';
   var CARDS = [
-    { img: 'ba-w-sunburn.jpg',  tag: 'Sunburn',                area: 'Shoulders and upper back',  alt: 'Before and after comparison of sunburned shoulders, calmed and even-toned' },
-    { img: 'ba-m-postproc.jpg', tag: 'Post-procedure redness', area: 'Face, after microneedling', alt: 'Before and after comparison of post-procedure facial redness on a man, calmed and even-toned' },
-    { img: 'ba-w-burn.jpg',     tag: 'Minor kitchen burn',     area: 'Forearm',                   alt: 'Before and after comparison of a minor kitchen burn on a forearm, smooth and even-toned' },
-    { img: 'ba-m-sunburn.jpg',  tag: 'Sunburn',                area: 'Back of neck',              alt: 'Before and after comparison of a sunburned neck, calmed and even-toned' },
-    { img: 'ba-w-postproc.jpg', tag: 'Post-procedure redness', area: 'Face, after laser',         alt: 'Before and after comparison of post-procedure facial redness on a woman, calmed and even-toned' },
-    { img: 'ba-m-burn.jpg',     tag: 'Minor grill burn',       area: 'Forearm',                   alt: 'Before and after comparison of a minor grill burn on a forearm, smooth and even-toned' }
+    { img: 'ba-w-sunburn.jpg?v=2',  tag: 'Sunburn',                area: 'Shoulders and upper back',  alt: 'Before and after comparison of sunburned shoulders, calmed and even-toned' },
+    { img: 'ba-m-postproc.jpg?v=2', tag: 'Post-procedure redness', area: 'Face, after microneedling', alt: 'Before and after comparison of post-procedure facial redness on a man, calmed and even-toned' },
+    { img: 'ba-w-burn.jpg?v=2',     tag: 'Minor kitchen burn',     area: 'Forearm',                   alt: 'Before and after comparison of a minor kitchen burn on a forearm, smooth and even-toned' },
+    { img: 'ba-m-sunburn.jpg?v=2',  tag: 'Sunburn',                area: 'Back of neck',              alt: 'Before and after comparison of a sunburned neck, calmed and even-toned' },
+    { img: 'ba-w-postproc.jpg?v=2', tag: 'Post-procedure redness', area: 'Face, after laser',         alt: 'Before and after comparison of post-procedure facial redness on a woman, calmed and even-toned' },
+    { img: 'ba-m-burn.jpg?v=2',     tag: 'Minor grill burn',       area: 'Forearm',                   alt: 'Before and after comparison of a minor grill burn on a forearm, smooth and even-toned' }
   ];
   var cardsHtml = CARDS.map(function(c){
     return '<figure class="ba-card"><div class="ba-imgwrap">'
