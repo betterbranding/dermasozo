@@ -67,9 +67,7 @@
     { img: 'ba-w-postproc.jpg?v=2', tag: 'Post-procedure redness', area: 'Face, after laser',         alt: 'Before and after comparison of post-procedure facial redness on a woman, calmed and even-toned' },
     { img: 'ba-m-postproc.jpg?v=2', tag: 'Post-procedure redness', area: 'Face, after microneedling', alt: 'Before and after comparison of post-procedure facial redness on a man, calmed and even-toned' },
     { img: 'ba-w-postproc2.jpg',    tag: 'Post-procedure redness', area: 'Face, after chemical peel', alt: 'Before and after comparison of post-procedure facial redness on a woman, calmed and even-toned' },
-    { img: 'ba-m-postproc2.jpg',    tag: 'Post-procedure redness', area: 'Face, after treatment',     alt: 'Before and after comparison of post-procedure facial redness on a man, calmed and even-toned' },
-    { img: 'ba-w-burn.jpg?v=2',     tag: 'Minor kitchen burn',     area: 'Forearm',                   alt: 'Before and after comparison of a minor kitchen burn on a forearm, smooth and even-toned' },
-    { img: 'ba-m-burn.jpg?v=2',     tag: 'Minor grill burn',       area: 'Forearm',                   alt: 'Before and after comparison of a minor grill burn on a forearm, smooth and even-toned' }
+    { img: 'ba-m-postproc2.jpg',    tag: 'Post-procedure redness', area: 'Face, after treatment',     alt: 'Before and after comparison of post-procedure facial redness on a man, calmed and even-toned' }
   ];
   var cardsHtml = CARDS.map(function(c){
     return '<figure class="ba-card"><div class="ba-imgwrap">'
@@ -80,7 +78,7 @@
   mount.innerHTML = '<section class="ba-sec" id="results" aria-label="Before and after gallery"><div class="wrap">'
     + '<div class="sec-head rv"><span class="eyebrow">Before and After</span>'
     + '<h2>Recovery you can <em>see</em></h2>'
-    + '<p>Post-procedure redness. Minor burns. Swipe through the kinds of recovery this system was made for.</p></div>'
+    + '<p>Swipe through the kind of post-procedure recovery this system was made for.</p></div>'
     + '<div class="ba-shell rv"><button class="ba-nav ba-prev" aria-label="Previous">&#8592;</button>'
     + '<div class="ba-track">' + cardsHtml + '</div>'
     + '<button class="ba-nav ba-next" aria-label="Next">&#8594;</button></div>'
