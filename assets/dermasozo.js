@@ -28,8 +28,23 @@
   if (toTop) toTop.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
   var t = document.getElementById('navToggle'), m = document.getElementById('navMenu');
   if (t && m) {
-    t.addEventListener('click', function(){ m.classList.toggle('open'); });
-    m.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ m.classList.remove('open'); }); });
+    if (!document.getElementById('dszNavFix')) {
+      var nf = document.createElement('style'); nf.id = 'dszNavFix';
+      nf.textContent = '@media(max-width:960px){#navToggle{padding:8px 12px;margin:-8px -12px;line-height:1;min-width:44px;min-height:44px}#navMenu{max-height:calc(100vh - 120px);overflow-y:auto;-webkit-overflow-scrolling:touch;z-index:901}#navMenu a{display:block;padding:6px 2px;font-size:16px}}';
+      document.head.appendChild(nf);
+    }
+    var setNav = function(open){
+      m.classList.toggle('open', open);
+      t.textContent = open ? '\u2715' : '\u2630';
+      t.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    t.setAttribute('aria-expanded', 'false');
+    t.addEventListener('click', function(e){ e.stopPropagation(); setNav(!m.classList.contains('open')); });
+    m.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ setNav(false); }); });
+    document.addEventListener('click', function(e){
+      if (m.classList.contains('open') && !m.contains(e.target) && e.target !== t) setNav(false);
+    });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') setNav(false); });
   }
   // reveal on scroll
   var io = new IntersectionObserver(function(es){
@@ -49,11 +64,11 @@
   }
   var IMG = 'https://betterbranding.github.io/dermasozo/images/';
   var CARDS = [
-    { img: 'ba-w-sunburn.jpg?v=2',  tag: 'Sunburn',                area: 'Shoulders and upper back',  alt: 'Before and after comparison of sunburned shoulders, calmed and even-toned' },
-    { img: 'ba-m-postproc.jpg?v=2', tag: 'Post-procedure redness', area: 'Face, after microneedling', alt: 'Before and after comparison of post-procedure facial redness on a man, calmed and even-toned' },
-    { img: 'ba-w-burn.jpg?v=2',     tag: 'Minor kitchen burn',     area: 'Forearm',                   alt: 'Before and after comparison of a minor kitchen burn on a forearm, smooth and even-toned' },
-    { img: 'ba-m-sunburn.jpg?v=2',  tag: 'Sunburn',                area: 'Back of neck',              alt: 'Before and after comparison of a sunburned neck, calmed and even-toned' },
     { img: 'ba-w-postproc.jpg?v=2', tag: 'Post-procedure redness', area: 'Face, after laser',         alt: 'Before and after comparison of post-procedure facial redness on a woman, calmed and even-toned' },
+    { img: 'ba-m-postproc.jpg?v=2', tag: 'Post-procedure redness', area: 'Face, after microneedling', alt: 'Before and after comparison of post-procedure facial redness on a man, calmed and even-toned' },
+    { img: 'ba-w-postproc2.jpg',    tag: 'Post-procedure redness', area: 'Face, after chemical peel', alt: 'Before and after comparison of post-procedure facial redness on a woman, calmed and even-toned' },
+    { img: 'ba-m-postproc2.jpg',    tag: 'Post-procedure redness', area: 'Face, after treatment',     alt: 'Before and after comparison of post-procedure facial redness on a man, calmed and even-toned' },
+    { img: 'ba-w-burn.jpg?v=2',     tag: 'Minor kitchen burn',     area: 'Forearm',                   alt: 'Before and after comparison of a minor kitchen burn on a forearm, smooth and even-toned' },
     { img: 'ba-m-burn.jpg?v=2',     tag: 'Minor grill burn',       area: 'Forearm',                   alt: 'Before and after comparison of a minor grill burn on a forearm, smooth and even-toned' }
   ];
   var cardsHtml = CARDS.map(function(c){
@@ -65,7 +80,7 @@
   mount.innerHTML = '<section class="ba-sec" id="results" aria-label="Before and after gallery"><div class="wrap">'
     + '<div class="sec-head rv"><span class="eyebrow">Before and After</span>'
     + '<h2>Recovery you can <em>see</em></h2>'
-    + '<p>Sunburn. Minor kitchen burns. Post-procedure redness. Swipe through the kinds of moments this system was made for.</p></div>'
+    + '<p>Post-procedure redness. Minor burns. Swipe through the kinds of recovery this system was made for.</p></div>'
     + '<div class="ba-shell rv"><button class="ba-nav ba-prev" aria-label="Previous">&#8592;</button>'
     + '<div class="ba-track">' + cardsHtml + '</div>'
     + '<button class="ba-nav ba-next" aria-label="Next">&#8594;</button></div>'
